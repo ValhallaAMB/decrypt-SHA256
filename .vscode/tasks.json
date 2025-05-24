@@ -10,7 +10,8 @@
                 "${file}",
                 "-o",
                 "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-lcrypto"
+                "-lcrypto",
+                "-fopenmp"
             ],
             "options": {
                 "cwd": "${fileDirname}"

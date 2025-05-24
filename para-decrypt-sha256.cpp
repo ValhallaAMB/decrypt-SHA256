@@ -1,11 +1,10 @@
 #include <iostream> // For input/output operations
 #include <iomanip> // For output formatting
 #include <sstream> // For string stream processing
-#include <chrono> // For high-precision timing
 #include <openssl/evp.h> // For SHA256 functions
+#include <omp.h> // For parallel processing
 
 using namespace std;
-using namespace chrono;
 
 // Character set used for brute-force attempts (lowercase, uppercase, digits)
 const string CHARSET = "abcdefghijklmnopqrstuvwxyz"; // ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
@@ -85,28 +84,25 @@ void decrypt_sha256(const string &target_hash, string &result)
 
 int main()
 {
-    // string input = "kgg"; // Example input to hash
-    // string target_hash = sha256(input);
-    // cout << input << " -> " << target_hash << endl;
+    string input = "kgusa";
+    string target_hash = sha256(input);
+    cout << input << " -> " << target_hash << endl;
+
     string found_result;
-    string target_hash = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"; // Example hash
-    cout << "Target hash: " << target_hash << endl;
+    // Start measuring time
+    double start_time = omp_get_wtime();
 
-    // Start timing the decryption process
-    auto start = high_resolution_clock::now(); 
-
-    // Call the decryption function to find the password
     decrypt_sha256(target_hash, found_result);
 
-    // End timing the decryption process
-    auto end = high_resolution_clock::now();
-    duration<double> elapsed = end - start;
+    // Stop measuring time
+    double end_time = omp_get_wtime();
 
     if (FOUND)
-        cout << "Found: " << found_result << endl;
+        cout << "Match Found: " << found_result << endl;
     else
-        cout << "Not found" << endl;
+        cout << "No match found within the given constraints." << endl;
 
-    cout << "Elapsed time: " << elapsed.count() << " seconds" << endl;
+    // Calculate the time taken in seconds
+    cout << "Time taken: " << end_time - start_time << " seconds" << endl;
     return 0;
 }
